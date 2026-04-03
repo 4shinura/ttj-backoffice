@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Offres en attente{% endblock %}
+
+{% block body %}
+<div class="container mx-auto p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Offres en attente de publication</h1>
+        <a href="{{ path('admin_dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Retour au dashboard</a>
+    </div>
+
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="py-2 px-4 border">ID</th>
+                <th class="py-2 px-4 border">Titre</th>
+                <th class="py-2 px-4 border">Type</th>
+                <th class="py-2 px-4 border">Description</th>
+                <th class="py-2 px-4 border">Date Publication</th>
+                <th class="py-2 px-4 border">Date Limite</th>
+                <th class="py-2 px-4 border">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for offer in pendingOffers %}
+            <tr>
+                <td class="py-2 px-4 border">{{ offer.id }}</td>
+                <td class="py-2 px-4 border">{{ offer.titre }}</td>
+                <td class="py-2 px-4 border">{{ offer.type }}</td>
+                <td class="py-2 px-4 border">{{ offer.description|slice(0, 50) }}...</td>
+                <td class="py-2 px-4 border">{{ offer.datePublication }}</td>
+                <td class="py-2 px-4 border">{{ offer.dateLimite }}</td>
+                <td class="py-2 px-4 border">
+                    <form method="post" action="{{ path('admin_publish_offer', {id: offer.id}) }}" class="inline">
+                        <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Publier</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
