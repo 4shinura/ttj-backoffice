@@ -1,78 +1,120 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}Admin — Tableau de bord{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-cover bg-center" style="background-image: url('/images/admin-dashboard-bg.png');">
-    <div class="bg-white/75 backdrop-blur-sm min-h-screen">
-        <div class="container mx-auto py-8 px-4">
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800">Tableau de bord administrateur</h1>
-                    <p class="text-sm text-slate-600 mt-1">Contrôle des inscriptions et de la publication des offres</p>
-                </div>
-                <a href="{{ path('admin_logout') }}" class="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700">
-                    Déconnexion
-                </a>
+<div class="bo-layout">
+
+    {# Sidebar #}
+    <aside class="bo-sidebar">
+        <div class="bo-brand">
+            <span class="bo-brand-icon">⬡</span>
+            <span class="bo-brand-name">Admin</span>
+        </div>
+        <nav class="bo-nav">
+            <a href="{{ path('admin_dashboard') }}" class="bo-nav-link active">
+                <span class="bo-nav-icon">▣</span> Tableau de bord
+            </a>
+            <a href="{{ path('admin_users') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◈</span> Utilisateurs
+            </a>
+            <a href="{{ path('admin_pending_registrations') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◎</span> Inscriptions
+            </a>
+            <a href="{{ path('admin_pending_offers') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◇</span> Offres
+            </a>
+        </nav>
+        <a href="{{ path('admin_logout') }}" class="bo-logout">
+            <span>⏻</span> Déconnexion
+        </a>
+    </aside>
+
+    {# Main #}
+    <main class="bo-main">
+        <header class="bo-header">
+            <div>
+                <h1 class="bo-page-title">Tableau de bord</h1>
+                <p class="bo-page-sub">Vue d'ensemble de l'activité</p>
             </div>
+        </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <a href="{{ path('admin_users') }}" class="p-4 bg-white rounded-2xl shadow-lg border border-slate-200 hover:shadow-xl transition">
-                    <h2 class="text-lg font-semibold text-blue-600">Utilisateurs</h2>
-                    <p class="mt-1 text-sm text-slate-500">Voir et gérer les utilisateurs</p>
-                </a>
-
-                <a href="{{ path('admin_pending_registrations') }}" class="p-4 bg-white rounded-2xl shadow-lg border border-slate-200 hover:shadow-xl transition">
-                    <h2 class="text-lg font-semibold text-amber-600">Inscriptions en attente</h2>
-                    <p class="mt-1 text-sm text-slate-500">Valider les nouveaux comptes</p>
-                </a>
-
-                <a href="{{ path('admin_pending_offers') }}" class="p-4 bg-white rounded-2xl shadow-lg border border-slate-200 hover:shadow-xl transition">
-                    <h2 class="text-lg font-semibold text-emerald-600">Offres en attente</h2>
-                    <p class="mt-1 text-sm text-slate-500">Publier les offres validées</p>
-                </a>
+        {# Stats #}
+        <div class="bo-stats">
+            <div class="bo-stat bo-stat--blue">
+                <div class="bo-stat-label">Utilisateurs</div>
+                <div class="bo-stat-value">—</div>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div class="bg-white p-5 rounded-2xl shadow-xl border border-slate-200">
-                    <h3 class="font-semibold text-slate-800 mb-3">Inscriptions en attente de validation</h3>
-                    {% if pendingUsers is not empty %}
-                        <ul class="space-y-2 max-h-60 overflow-auto">
-                            {% for user in pendingUsers %}
-                                <li class="p-2 rounded-lg bg-slate-50 border border-slate-200">
-                                    <div class="flex items-center justify-between text-sm">
-                                        <span class="font-medium">{{ user.nom }} {{ user.prenom }} ({{ user.type }})</span>
-                                        <span class="text-slate-500">#{{ user.id }}</span>
-                                    </div>
-                                    <div class="text-xs text-slate-500">{{ user.email }} • {{ user.statut }}</div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <div class="h-48 bg-slate-100 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-slate-400">Aucune inscription en attente</div>
-                    {% endif %}
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl shadow-xl border border-slate-200">
-                    <h3 class="font-semibold text-slate-800 mb-3">Candidatures en attente de validation</h3>
-                    {% if pendingOffers is not empty %}
-                        <ul class="space-y-2 max-h-60 overflow-auto">
-                            {% for offer in pendingOffers %}
-                                <li class="p-2 rounded-lg bg-slate-50 border border-slate-200">
-                                    <div class="flex items-center justify-between text-sm">
-                                        <span class="font-medium">{{ offer.titre|default('Titre inconnu') }}</span>
-                                        <span class="text-slate-500">#{{ offer.id }}</span>
-                                    </div>
-                                    <div class="text-xs text-slate-500">{{ offer.type }} • {{ offer.datePublication|default('-') }}</div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <div class="h-48 bg-slate-100 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-slate-400">Aucune candidature en attente</div>
-                    {% endif %}
-                </div>
+            <div class="bo-stat bo-stat--amber">
+                <div class="bo-stat-label">Inscriptions en attente</div>
+                <div class="bo-stat-value">{{ pendingUsers|length }}</div>
+            </div>
+            <div class="bo-stat bo-stat--green">
+                <div class="bo-stat-label">Offres en attente</div>
+                <div class="bo-stat-value">{{ pendingOffers|length }}</div>
             </div>
         </div>
-    </div>
+
+        {# Tables #}
+        <div class="bo-grid-2">
+
+            <div class="bo-card">
+                <div class="bo-card-head">
+                    <h2 class="bo-card-title">Inscriptions en attente</h2>
+                    <a href="{{ path('admin_pending_registrations') }}" class="bo-link-more">Voir tout →</a>
+                </div>
+                {% if pendingUsers is not empty %}
+                <table class="bo-table">
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Nom</th><th>Email</th><th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in pendingUsers|slice(0, 5) %}
+                        <tr>
+                            <td class="bo-id">{{ user.id }}</td>
+                            <td><strong>{{ user.prenom }} {{ user.nom }}</strong></td>
+                            <td class="bo-muted">{{ user.email }}</td>
+                            <td><span class="bo-badge bo-badge--blue">{{ user.type }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="bo-empty">Aucune inscription en attente</div>
+                {% endif %}
+            </div>
+
+            <div class="bo-card">
+                <div class="bo-card-head">
+                    <h2 class="bo-card-title">Offres en attente</h2>
+                    <a href="{{ path('admin_pending_offers') }}" class="bo-link-more">Voir tout →</a>
+                </div>
+                {% if pendingOffers is not empty %}
+                <table class="bo-table">
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Titre</th><th>Type</th><th>Date limite</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for offer in pendingOffers|slice(0, 5) %}
+                        <tr>
+                            <td class="bo-id">{{ offer.id }}</td>
+                            <td><strong>{{ offer.titre|default('—') }}</strong></td>
+                            <td><span class="bo-badge bo-badge--green">{{ offer.type }}</span></td>
+                            <td class="bo-muted">{{ offer.dateLimite|default('—') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="bo-empty">Aucune offre en attente</div>
+                {% endif %}
+            </div>
+
+        </div>
+    </main>
 </div>
 {% endblock %}

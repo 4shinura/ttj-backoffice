@@ -1,41 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les utilisateurs{% endblock %}
+{% block title %}Admin — Utilisateurs{% endblock %}
 
 {% block body %}
-<div class="container mx-auto p-4">
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-bold">Gérer les utilisateurs</h1>
-        <a href="{{ path('admin_dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Retour au dashboard</a>
-    </div>
+<div class="bo-layout">
 
-    <table class="min-w-full bg-white border border-gray-300">
-        <thead>
-            <tr class="bg-gray-100">
-                <th class="py-2 px-4 border">ID</th>
-                <th class="py-2 px-4 border">Nom</th>
-                <th class="py-2 px-4 border">Prénom</th>
-                <th class="py-2 px-4 border">Email</th>
-                <th class="py-2 px-4 border">Type</th>
-                <th class="py-2 px-4 border">Statut</th>
-                <th class="py-2 px-4 border">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td class="py-2 px-4 border">{{ user.id }}</td>
-                <td class="py-2 px-4 border">{{ user.nom }}</td>
-                <td class="py-2 px-4 border">{{ user.prenom }}</td>
-                <td class="py-2 px-4 border">{{ user.email }}</td>
-                <td class="py-2 px-4 border">{{ user.type }}</td>
-                <td class="py-2 px-4 border">{{ user.statut }}</td>
-                <td class="py-2 px-4 border">
-                    <!-- Add edit/delete actions if needed -->
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <aside class="bo-sidebar">
+        <div class="bo-brand">
+            <span class="bo-brand-icon">⬡</span>
+            <span class="bo-brand-name">Admin</span>
+        </div>
+        <nav class="bo-nav">
+            <a href="{{ path('admin_dashboard') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">▣</span> Tableau de bord
+            </a>
+            <a href="{{ path('admin_users') }}" class="bo-nav-link active">
+                <span class="bo-nav-icon">◈</span> Utilisateurs
+            </a>
+            <a href="{{ path('admin_pending_registrations') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◎</span> Inscriptions
+            </a>
+            <a href="{{ path('admin_pending_offers') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◇</span> Offres
+            </a>
+        </nav>
+        <a href="{{ path('admin_logout') }}" class="bo-logout">
+            <span>⏻</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="bo-main">
+        <header class="bo-header">
+            <div>
+                <h1 class="bo-page-title">Utilisateurs</h1>
+                <p class="bo-page-sub">{{ users|length }} compte(s) enregistré(s)</p>
+            </div>
+        </header>
+
+        <div class="bo-card">
+            {% if users is not empty %}
+            <table class="bo-table bo-table--full">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="bo-id">{{ user.id }}</td>
+                        <td><strong>{{ user.nom }}</strong></td>
+                        <td>{{ user.prenom }}</td>
+                        <td class="bo-muted">{{ user.email }}</td>
+                        <td><span class="bo-badge bo-badge--blue">{{ user.type }}</span></td>
+                        <td>
+                            <span class="bo-badge {{ user.statut == 'actif' ? 'bo-badge--green' : 'bo-badge--red' }}">
+                                {{ user.statut }}
+                            </span>
+                        </td>
+                        <td>
+                            {# Ajouter les actions ici si besoin #}
+                            <span class="bo-muted">—</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="bo-empty">Aucun utilisateur trouvé</div>
+            {% endif %}
+        </div>
+    </main>
 </div>
 {% endblock %}
