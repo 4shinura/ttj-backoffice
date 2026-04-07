@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin — Utilisateurs{% endblock %}
+{% block title %}Admin — Voir utilisateur{% endblock %}
 
 {% block body %}
 <div class="bo-layout">
@@ -32,56 +32,55 @@
     <main class="bo-main">
         <header class="bo-header">
             <div>
-                <h1 class="bo-page-title">Utilisateurs</h1>
-                <p class="bo-page-sub">{{ users|length }} compte(s) enregistré(s)</p>
+                <h1 class="bo-page-title">Détail de l'utilisateur</h1>
+                <p class="bo-page-sub">{{ user.nom }} {{ user.prenom }}</p>
             </div>
-            <a href="{{ path('admin_user_new') }}" class="bo-btn bo-btn--blue">Ajouter un utilisateur</a>
+            <div style="display:flex; gap:8px;">
+                <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="bo-btn bo-btn--blue">Modifier</a>
+                <a href="{{ path('admin_users') }}" class="bo-btn" style="background:#f1f5f9; color:#374151;">Retour</a>
+            </div>
         </header>
 
         <div class="bo-card">
-            {% if users is not empty %}
             <table class="bo-table bo-table--full">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Email</th>
-                        <th>Type</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
                 <tbody>
-                    {% for user in users %}
                     <tr>
+                        <td class="bo-muted" style="width:160px;">#</td>
                         <td class="bo-id">{{ user.id }}</td>
+                    </tr>
+                    <tr>
+                        <td class="bo-muted">Nom</td>
                         <td><strong>{{ user.nom }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="bo-muted">Prénom</td>
                         <td>{{ user.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <td class="bo-muted">Email</td>
                         <td class="bo-muted">{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td class="bo-muted">Type</td>
                         <td><span class="bo-badge bo-badge--blue">{{ user.type }}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="bo-muted">Statut</td>
                         <td>
                             <span class="bo-badge {{ user.statut == 'actif' ? 'bo-badge--green' : 'bo-badge--red' }}">
                                 {{ user.statut }}
                             </span>
                         </td>
-                        <td>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <a href="{{ path('admin_user_show', {id: user.id}) }}" class="bo-btn bo-btn--blue">Voir</a>
-                                <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="bo-btn" style="background:#f1f5f9; color:#374151;">Modifier</a>
-                                <form action="{{ path('admin_user_delete', {id: user.id}) }}" method="post" style="display:inline">
-                                    <button type="submit" class="bo-btn bo-btn--red"
-                                            onclick="return confirm('Supprimer cet utilisateur ?');">Supprimer</button>
-                                </form>
-                            </div>
-                        </td>
                     </tr>
-                    {% endfor %}
                 </tbody>
             </table>
-            {% else %}
-            <div class="bo-empty">Aucun utilisateur trouvé</div>
-            {% endif %}
+
+            <div style="padding:16px 20px; border-top:1px solid var(--bo-border);">
+                <form action="{{ path('admin_user_delete', {id: user.id}) }}" method="post"
+                      onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                    <button type="submit" class="bo-btn bo-btn--red">Supprimer</button>
+                </form>
+            </div>
         </div>
     </main>
 </div>

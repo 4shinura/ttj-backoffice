@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin — {{ formTitle }}{% endblock %}
+
+{% block body %}
+<div class="bo-layout">
+
+    <aside class="bo-sidebar">
+        <div class="bo-brand">
+            <span class="bo-brand-icon">⬡</span>
+            <span class="bo-brand-name">Admin</span>
+        </div>
+        <nav class="bo-nav">
+            <a href="{{ path('admin_dashboard') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">▣</span> Tableau de bord
+            </a>
+            <a href="{{ path('admin_users') }}" class="bo-nav-link active">
+                <span class="bo-nav-icon">◈</span> Utilisateurs
+            </a>
+            <a href="{{ path('admin_pending_registrations') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◎</span> Inscriptions
+            </a>
+            <a href="{{ path('admin_pending_offers') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◇</span> Offres
+            </a>
+        </nav>
+        <a href="{{ path('admin_logout') }}" class="bo-logout">
+            <span>⏻</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="bo-main">
+        <header class="bo-header">
+            <div>
+                <h1 class="bo-page-title">{{ formTitle }}</h1>
+                <p class="bo-page-sub">Gestion des utilisateurs</p>
+            </div>
+            <a href="{{ path('admin_users') }}" class="bo-btn" style="background:#f1f5f9; color:#374151;">
+                Retour à la liste
+            </a>
+        </header>
+
+        <div class="bo-card" style="max-width:560px;">
+
+            {% if error %}
+                <div style="padding:12px 20px; background:#fef2f2; color:#b91c1c;
+                            border-bottom:1px solid #fecaca; font-size:13.5px;">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{{ isEdit ? path(actionPath, {'id': user.id}) : path(actionPath) }}"
+                  method="post"
+                  style="padding:24px 28px; display:flex; flex-direction:column; gap:18px;">
+
+                {# Champ générique #}
+                {% macro field(id, label, type, value, required) %}
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label for="{{ id }}"
+                           style="font-size:12px; font-weight:600; text-transform:uppercase;
+                                  letter-spacing:.5px; color:var(--bo-muted);">
+                        {{ label }}
+                    </label>
+                    <input id="{{ id }}" name="{{ id }}" type="{{ type }}"
+                           value="{{ value }}" {{ required ? 'required' : '' }}
+                           style="padding:8px 12px; border:1px solid var(--bo-border);
+                                  border-radius:6px; font-size:13.5px; font-family:var(--bo-font);
+                                  color:var(--bo-text); background:#fff; outline:none;
+                                  transition:border-color .15s;">
+                </div>
+                {% endmacro %}
+
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label for="nom" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Nom</label>
+                    <input id="nom" name="nom" type="text" value="{{ user.nom }}" required
+                           style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;">
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label for="prenom" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Prénom</label>
+                    <input id="prenom" name="prenom" type="text" value="{{ user.prenom }}" required
+                           style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;">
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label for="email" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Email</label>
+                    <input id="email" name="email" type="email" value="{{ user.email }}" required
+                           style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;">
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label for="type" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Type</label>
+                    <select id="type" name="type"
+                            style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;">
+                        <option value="utilisateur"    {{ user.type == 'utilisateur'    ? 'selected' : '' }}>Utilisateur</option>
+                        <option value="administrateur" {{ user.type == 'administrateur' ? 'selected' : '' }}>Administrateur</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label for="statut" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Statut</label>
+                    <select id="statut" name="statut"
+                            style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;">
+                        <option value="actif"   {{ user.statut == 'actif'   ? 'selected' : '' }}>Actif</option>
+                        <option value="inactif" {{ user.statut == 'inactif' ? 'selected' : '' }}>Inactif</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label for="password" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Mot de passe</label>
+                    <input id="password" name="password" type="password"
+                           style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;">
+                    {% if isEdit %}
+                        <p style="font-size:12px; color:var(--bo-muted); margin-top:2px;">
+                            Laisser vide pour conserver le mot de passe actuel.
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div style="display:flex; gap:8px; padding-top:8px; border-top:1px solid var(--bo-border);">
+                    <button type="submit" class="bo-btn bo-btn--blue">
+                        {{ isEdit ? 'Enregistrer' : 'Créer' }}
+                    </button>
+                    <a href="{{ path('admin_users') }}" class="bo-btn" style="background:#f1f5f9; color:#374151;">
+                        Annuler
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
