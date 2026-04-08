@@ -64,13 +64,17 @@ class AuthController extends AbstractController
                     }
                 } elseif ($status === 401) {
                     $error = 'Email ou mot de passe incorrect';
+                } elseif ($status === 403) {
+                    $error = 'Votre compte a été désactivé ou n\'a pas encore été approuvé';
                 } else {
                     $error = $data['error'] ?? 'Erreur de connexion au serveur';
                 }
             } catch (HttpExceptionInterface $e) {
                 $error = $e->getCode() === 401
                     ? 'Email ou mot de passe incorrect'
-                    : 'Erreur de connexion au serveur';
+                    : ($e->getCode() === 403
+                        ? 'Votre compte a été désactivé ou n\'a pas encore été approuvé'
+                        : 'Erreur de connexion au serveur');
             } catch (TransportExceptionInterface) {
                 $error = 'Erreur réseau : impossible de contacter l\'API';
             }

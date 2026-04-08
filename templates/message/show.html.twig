@@ -43,12 +43,6 @@
                 </p>
             </div>
             <div style="display:flex; gap:8px;">
-                {% if direction == 'received' %}
-                    <a href="{{ path('message_send_form', { destinataireId: message.emetteur.id ?? 0 }) }}"
-                       class="bo-btn bo-btn--blue">
-                        Répondre
-                    </a>
-                {% endif %}
                 <a href="javascript:history.back()"
                    class="bo-btn" style="background:#f1f5f9; color:#374151;">
                     Retour

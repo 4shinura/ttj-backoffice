@@ -203,7 +203,7 @@
         });
 
         var form = document.getElementById('send-form');
-        form.action = '/api/users/messages/send/' + id;
+        form.action = '/admin/messages/send/' + id;
     };
 
     window.filterUsers = function (query) {
@@ -217,7 +217,7 @@
     {% if preselectedId %}
     (function () {
         var form = document.getElementById('send-form');
-        form.action = '/api/users/messages/send/{{ preselectedId }}';
+        form.action = '/admin/messages/send/' + selectedId;
     })();
     {% endif %}
 })();

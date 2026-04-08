@@ -63,29 +63,6 @@ class MessageController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/messages/send/{destinataireId}', name: 'message_send_form', methods: ['GET'])]
-    public function sendForm(int $destinataireId, Request $request): Response
-    {
-        if (!$this->isLoggedIn($request)) {
-            return $this->redirectToRoute('admin_login');
-        }
-
-        try {
-            $response = $this->httpClient->request('GET', $this->apiBaseUrl . '/admin/utilisateurs', [
-                'headers' => $this->bearerHeaders($request),
-            ]);
-            $users = $response->toArray();
-        } catch (\Exception) {
-            $users = [];
-        }
-
-        return $this->render('message/new.html.twig', [
-            'users' => $users,
-            'preselectedId' => $destinataireId,
-            'error' => null,
-        ]);
-    }
-
     #[Route('/admin/messages/send/{destinataireId}', name: 'message_send', methods: ['POST'])]
     public function sendMessage(int $destinataireId, Request $request): Response
     {
