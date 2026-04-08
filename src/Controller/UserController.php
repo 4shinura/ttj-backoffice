@@ -38,21 +38,6 @@ class UserController extends AbstractController
         return $this->render('admin/users.html.twig', ['users' => $users]);
     }
 
-    #[Route('/admin/users/{id}', name: 'admin_user_show')]
-    public function showUser(int $id, Request $request): Response
-    {
-        if (!$this->isLoggedIn($request)) {
-            return $this->redirectToRoute('admin_login');
-        }
-
-        $user = $this->getUserById($id, $request);
-        if ($user === null) {
-            return $this->redirectToRoute('admin_users');
-        }
-
-        return $this->render('admin/user_show.html.twig', ['user' => $user]);
-    }
-
     #[Route('/admin/users/new', name: 'admin_user_new', methods: ['GET', 'POST'])]
     public function newUser(Request $request): Response
     {
@@ -98,6 +83,21 @@ class UserController extends AbstractController
             'error' => $error,
             'isEdit' => false,
         ]);
+    }
+
+    #[Route('/admin/users/{id}', name: 'admin_user_show')]
+    public function showUser(int $id, Request $request): Response
+    {
+        if (!$this->isLoggedIn($request)) {
+            return $this->redirectToRoute('admin_login');
+        }
+
+        $user = $this->getUserById($id, $request);
+        if ($user === null) {
+            return $this->redirectToRoute('admin_users');
+        }
+
+        return $this->render('admin/user_show.html.twig', ['user' => $user]);
     }
 
     #[Route('/admin/users/{id}/edit', name: 'admin_user_edit', methods: ['GET', 'POST'])]

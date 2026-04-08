@@ -93,6 +93,8 @@
                     <select id="type" name="type"
                             style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;">
                         <option value="utilisateur"    {{ user.type == 'utilisateur'    ? 'selected' : '' }}>Utilisateur</option>
+                        <option value="recruteur"    {{ user.type == 'recruteur'    ? 'selected' : '' }}>Recruteur</option>
+                        <option value="candidat"    {{ user.type == 'candidat'    ? 'selected' : '' }}>Candidat</option>
                         <option value="administrateur" {{ user.type == 'administrateur' ? 'selected' : '' }}>Administrateur</option>
                     </select>
                 </div>
