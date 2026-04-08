@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message — Détail{% endblock %}
+
+{% block body %}
+<div class="bo-layout">
+
+    <aside class="bo-sidebar">
+        <div class="bo-brand">
+            <span class="bo-brand-icon">⬡</span>
+            <span class="bo-brand-name">Admin</span>
+        </div>
+        <nav class="bo-nav">
+            <a href="{{ path('admin_dashboard') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">▣</span> Tableau de bord
+            </a>
+            <a href="{{ path('admin_users') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◈</span> Utilisateurs
+            </a>
+            <a href="{{ path('admin_pending_registrations') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◎</span> Inscriptions
+            </a>
+            <a href="{{ path('admin_pending_offers') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◇</span> Offres
+            </a>
+            <a href="{{ path('message_index') }}" class="bo-nav-link active">
+                <span class="bo-nav-icon">✉</span> Messagerie
+            </a>
+        </nav>
+        <a href="{{ path('admin_logout') }}" class="bo-logout">
+            <span>⏻</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="bo-main">
+        <header class="bo-header">
+            <div>
+                <h1 class="bo-page-title">Détail du message</h1>
+                <p class="bo-page-sub">
+                    <span class="bo-badge {{ direction == 'sent' ? 'bo-badge--blue' : 'bo-badge--green' }}">
+                        {{ direction == 'sent' ? 'Envoyé' : 'Reçu' }}
+                    </span>
+                </p>
+            </div>
+            <div style="display:flex; gap:8px;">
+                {% if direction == 'received' %}
+                    <a href="{{ path('message_send_form', { destinataireId: message.emetteur.id ?? 0 }) }}"
+                       class="bo-btn bo-btn--blue">
+                        Répondre
+                    </a>
+                {% endif %}
+                <a href="javascript:history.back()"
+                   class="bo-btn" style="background:#f1f5f9; color:#374151;">
+                    Retour
+                </a>
+            </div>
+        </header>
+
+        <div class="bo-card" style="max-width:680px;">
+            <div style="padding:24px 28px; display:flex; flex-direction:column; gap:16px;">
+
+                {# Méta #}
+                <div style="display:grid; grid-template-columns:80px 1fr; gap:10px 0; font-size:13.5px; padding-bottom:16px; border-bottom:1px solid var(--bo-border);">
+
+                    <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted); padding-top:2px;">De</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div style="
+                            width:28px; height:28px; border-radius:50%;
+                            background:#dbeafe; color:#1d4ed8;
+                            display:flex; align-items:center; justify-content:center;
+                            font-size:11px; font-weight:600; font-family:var(--bo-mono); flex-shrink:0;
+                        ">
+                            {{ message.emetteur.prenom|first|upper }}{{ message.emetteur.nom|first|upper }}
+                        </div>
+                        <span>{{ message.emetteur.prenom }} {{ message.emetteur.nom }}</span>
+                    </div>
+
+                    <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted); padding-top:2px;">À</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div style="
+                            width:28px; height:28px; border-radius:50%;
+                            background:#f0fdf4; color:#15803d;
+                            display:flex; align-items:center; justify-content:center;
+                            font-size:11px; font-weight:600; font-family:var(--bo-mono); flex-shrink:0;
+                        ">
+                            {{ message.destinataire.prenom|first|upper }}{{ message.destinataire.nom|first|upper }}
+                        </div>
+                        <span>{{ message.destinataire.prenom }} {{ message.destinataire.nom }}</span>
+                    </div>
+
+                    <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted); padding-top:2px;">Date</span>
+                    <span style="color:var(--bo-muted);">{{ message.dateEnvoi }}</span>
+
+                    <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted); padding-top:2px;">ID</span>
+                    <span class="bo-id">#{{ message.id }}</span>
+
+                </div>
+
+                {# Corps du message #}
+                <div>
+                    <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted); margin-bottom:10px;">
+                        Contenu
+                    </div>
+                    <div style="
+                        background:#f8f9fb;
+                        border:1px solid var(--bo-border);
+                        border-radius:8px;
+                        padding:16px 18px;
+                        font-size:14px;
+                        line-height:1.7;
+                        color:#374151;
+                        white-space:pre-wrap;
+                    ">{{ message.contenu }}</div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</div>
+{% endblock %}

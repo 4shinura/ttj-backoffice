@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messagerie — Conversations{% endblock %}
+
+{% block body %}
+<div class="bo-layout">
+
+    <aside class="bo-sidebar">
+        <div class="bo-brand">
+            <span class="bo-brand-icon">⬡</span>
+            <span class="bo-brand-name">Admin</span>
+        </div>
+        <nav class="bo-nav">
+            <a href="{{ path('admin_dashboard') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">▣</span> Tableau de bord
+            </a>
+            <a href="{{ path('admin_users') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◈</span> Utilisateurs
+            </a>
+            <a href="{{ path('admin_pending_registrations') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◎</span> Inscriptions
+            </a>
+            <a href="{{ path('admin_pending_offers') }}" class="bo-nav-link">
+                <span class="bo-nav-icon">◇</span> Offres
+            </a>
+            <a href="{{ path('message_index') }}" class="bo-nav-link active">
+                <span class="bo-nav-icon">✉</span> Messagerie
+            </a>
+        </nav>
+        <a href="{{ path('admin_logout') }}" class="bo-logout">
+            <span>⏻</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="bo-main">
+        <header class="bo-header">
+            <div>
+                <h1 class="bo-page-title">Messagerie</h1>
+                <p class="bo-page-sub">{{ correspondents|length }} conversation(s)</p>
+            </div>
+            <a href="{{ path('message_new') }}" class="bo-btn bo-btn--blue">
+                + Nouveau message
+            </a>
+        </header>
+
+        <div class="bo-card">
+            {% if correspondents is empty %}
+                <div class="bo-empty">Aucune conversation pour le moment.</div>
+            {% else %}
+                <table class="bo-table bo-table--full">
+                    <thead>
+                        <tr>
+                            <th>Correspondant</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for correspondent in correspondents %}
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <div style="
+                                        width:36px; height:36px; border-radius:50%;
+                                        background:#dbeafe; color:#1d4ed8;
+                                        display:flex; align-items:center; justify-content:center;
+                                        font-weight:600; font-size:12px; flex-shrink:0;
+                                        font-family:var(--bo-mono);
+                                    ">
+                                        {{ correspondent.prenom|first|upper }}{{ correspondent.nom|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:500; font-size:13.5px;">
+                                            {{ correspondent.prenom }} {{ correspondent.nom }}
+                                        </div>
+                                        <div class="bo-id">#{{ correspondent.id }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="bo-muted">{{ correspondent.email }}</td>
+                            <td>
+                                <a href="{{ path('message_conversation', { correspondantId: correspondent.id }) }}"
+                                   class="bo-btn bo-btn--blue">
+                                    Voir la conversation
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </main>
+
+</div>
+{% endblock %}
