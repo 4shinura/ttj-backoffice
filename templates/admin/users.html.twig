@@ -8,7 +8,7 @@
     <aside class="bo-sidebar">
         <div class="bo-brand">
             <span class="bo-brand-icon">⬡</span>
-            <span class="bo-brand-name">Admin</span>
+            <span class="bo-brand-name">Admin - TTJ</span>
         </div>
         <nav class="bo-nav">
             <a href="{{ path('admin_dashboard') }}" class="bo-nav-link">
@@ -40,6 +40,17 @@
             </div>
             <a href="{{ path('admin_user_new') }}" class="bo-btn bo-btn--blue">Ajouter un utilisateur</a>
         </header>
+
+        {% for message in app.flashes('success') %}
+            <div style="padding:12px 20px; background:#d1fae5; color:#065f46; border-bottom:1px solid #a7f3d0; font-size:13.5px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div style="padding:12px 20px; background:#fef2f2; color:#b91c1c; border-bottom:1px solid #fecaca; font-size:13.5px;">
+                {{ message }}
+            </div>
+        {% endfor %}
 
         <div class="bo-card">
             {% if users is not empty %}

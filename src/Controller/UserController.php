@@ -66,11 +66,17 @@ class UserController extends AbstractController
 
                 return $this->redirectToRoute('admin_users');
             } catch (HttpExceptionInterface $e) {
-                $error = $e->getMessage();
+                $statusCode = $e->getResponse()->getStatusCode();
+                try {
+                    $responseData = $e->getResponse()->toArray(false);
+                    $error = $responseData['error'] ?? "Erreur lors de la création (code $statusCode)";
+                } catch (Exception) {
+                    $error = "Erreur HTTP $statusCode : " . $e->getMessage();
+                }
             } catch (TransportExceptionInterface) {
-                $error = 'Erreur réseau : impossible de contacter l\'API';
+                $error = 'Erreur réseau : impossible de contacter l\'API. Vérifiez votre connexion.';
             } catch (Exception) {
-                $error = 'Impossible de créer cet utilisateur';
+                $error = 'Une erreur inattendue s\'est produite lors de la création.';
             }
 
             $user = array_merge($user, $payload);
@@ -125,11 +131,17 @@ class UserController extends AbstractController
 
                 return $this->redirectToRoute('admin_users');
             } catch (HttpExceptionInterface $e) {
-                $error = $e->getMessage();
+                $statusCode = $e->getResponse()->getStatusCode();
+                try {
+                    $responseData = $e->getResponse()->toArray(false);
+                    $error = $responseData['error'] ?? "Erreur lors de la modification (code $statusCode)";
+                } catch (Exception) {
+                    $error = "Erreur HTTP $statusCode : " . $e->getMessage();
+                }
             } catch (TransportExceptionInterface) {
-                $error = 'Erreur réseau : impossible de contacter l\'API';
+                $error = 'Erreur réseau : impossible de contacter l\'API. Vérifiez votre connexion.';
             } catch (Exception) {
-                $error = 'Impossible de modifier cet utilisateur';
+                $error = 'Une erreur inattendue s\'est produite lors de la modification.';
             }
 
             $user = array_merge($user, $payload);
@@ -155,8 +167,9 @@ class UserController extends AbstractController
             $this->httpClient->request('DELETE', $this->apiBaseUrl . '/admin/utilisateurs/' . $id, [
                 'headers' => $this->bearerHeaders($request),
             ]);
+            $this->addFlash('success', 'Utilisateur supprimé avec succès.');
         } catch (Exception) {
-            // ignore et redirige vers la liste
+            $this->addFlash('error', 'Erreur lors de la suppression de l\'utilisateur.');
         }
 
         return $this->redirectToRoute('admin_users');
@@ -180,9 +193,13 @@ class UserController extends AbstractController
             'nom' => $request->request->get('nom', ''),
             'prenom' => $request->request->get('prenom', ''),
             'email' => $request->request->get('email', ''),
-            'type' => $request->request->get('type', 'utilisateur'),
             'statut' => $request->request->get('statut', 'actif'),
+            'type' => $request->request->get('type', 'utilisateur'),
         ];
+
+        if ($payload['type'] === 'recruteur') {
+            $payload['entrepriseId'] = $request->request->get('entrepriseId', '');
+        }
 
         $password = $request->request->get('password', '');
         if (!$isEdit || $password !== '') {

@@ -8,7 +8,7 @@
     <aside class="bo-sidebar">
         <div class="bo-brand">
             <span class="bo-brand-icon">⬡</span>
-            <span class="bo-brand-name">Admin</span>
+            <span class="bo-brand-name">Admin - TTJ</span>
         </div>
         <nav class="bo-nav">
             <a href="{{ path('admin_dashboard') }}" class="bo-nav-link">
@@ -102,6 +102,16 @@
                     </select>
                 </div>
 
+                <div id="entreprise-field" style="display: {{ user.type == 'recruteur' ? 'flex' : 'none' }}; flex-direction:column; gap:5px;">
+                    <label for="entrepriseId" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Entreprise (ID)</label>
+                    <input id="entrepriseId" name="entrepriseId" type="number" value="{{ user.entrepriseId | default('') }}"
+                           style="padding:8px 12px; border:1px solid var(--bo-border); border-radius:6px; font-size:13.5px; font-family:var(--bo-font); color:var(--bo-text); background:#fff; outline:none;"
+                           {{ user.type == 'recruteur' ? 'required' : '' }}>
+                    <p style="font-size:12px; color:var(--bo-muted); margin-top:2px;">
+                        ID de l’entreprise requis si l’utilisateur devient recruteur.
+                    </p>
+                </div>
+
                 <div style="display:flex; flex-direction:column; gap:5px;">
                     <label for="statut" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--bo-muted);">Statut</label>
                     <select id="statut" name="statut"
@@ -132,6 +142,25 @@
                 </div>
 
             </form>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const typeSelect = document.getElementById('type');
+                    const entrepriseField = document.getElementById('entreprise-field');
+                    const entrepriseInput = document.getElementById('entrepriseId');
+
+                    function toggleEntrepriseField() {
+                        const isRecruteur = typeSelect.value === 'recruteur';
+                        entrepriseField.style.display = isRecruteur ? 'flex' : 'none';
+                        entrepriseInput.required = isRecruteur;
+                        if (!isRecruteur) {
+                            entrepriseInput.value = '';
+                        }
+                    }
+
+                    typeSelect.addEventListener('change', toggleEntrepriseField);
+                    toggleEntrepriseField();
+                });
+            </script>
         </div>
     </main>
 </div>
