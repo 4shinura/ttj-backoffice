@@ -16,7 +16,7 @@ class MessageController extends AbstractController
 {
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly string $apiBaseUrl = "http://localhost:5555/api",
+        private readonly string $apiBaseUrl = "https://ttj-api.vltmc.fr/api",
     ) {}
 
     #[Route('/admin/messages', name: 'message_index')]
